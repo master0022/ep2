@@ -1,2 +1,10 @@
 # ep2
  
+Trabalho desenvolvido por 
+
+CAIO VINICIUS SOARES AMARAL - NUSP: 10706083
+THALES AUGUSTO SOUTO RODRIGUEZ - NUSP: 10706110
+GUSTAVO PRIETO – NUSP 4581945
+
+
+Explicações podem ser encontradas em ep2.pdf

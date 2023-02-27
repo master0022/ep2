@@ -1,30 +1,5 @@
 defmodule Reconhecedor do
-  @moduledoc """
-  Documentation for `Reconhecedor`.
-  """
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Reconhecedor.hello()
-      :world
-
-  """
-  def cadaregra(palavras, regras, idx_palavra\\0,idx_regra\\0) do
-    case Enum.fetch(regras,idx_regra) do
-      :error -> :naotemmatch
-      {:ok,regra} ->
-        resultado = :true
-
-    end
-
-  end
-
-  def cadapalavra(palavras, regras, idx_palavra\\0) do
-    :world
-  end
 
 """
 Replacing 2,3,4 match etc
@@ -37,7 +12,6 @@ $1bB
 
 
 def usa_regra(palavra,regra, lista\\[],character_idx\\0) do
-  # Algoritmo bem ineficiente,:
   # Split a palavra em duas partes. [left,right], na posicao character idx.
   # Aplica usa_regra no primeiro termo do right, e tenta adicionar a lista (caso ja exista, skip).
   # Repete a operacao para todos os valores de character idx entre 0 e o tamanho da palavra
@@ -64,10 +38,15 @@ def reduzir_tamanho(lista,tamanho_maximo) do
 end
 
 def aplica_regras(palavra,regras,idx_regra\\0,lista\\[]) do
+  #Aplica varias regras a uma palavra, e retorna uma lista com as cadeias geradas.
   case Enum.fetch(regras,idx_regra) do
     {:ok,regra} ->
       resultado_regra = usa_regra(palavra,regra,lista)
       aplica_regras(palavra,regras,idx_regra+1,resultado_regra)
+    {:ok,[regra]} ->
+      resultado_regra = usa_regra(palavra,regra,lista)
+      aplica_regras(palavra,regras,idx_regra+1,resultado_regra)
+
     :error ->
       lista
   end
@@ -90,14 +69,14 @@ def aumenta_conjunto(palavras,regras,idx_palavra\\0,conjunto\\[]) do
   end
 end
 
-def calcula_conjunto(palavras,regras,tamanho_maximo,iteracao\\0) do
-  # Aplica aumenta_conjunto ate o tamanho maximo permitido vezes.
+def calcula_conjunto(palavras,regras,w,iteracao\\0) do
+  # Aplica aumenta_conjunto ate w permitido vezes, partindo de T0 ate Tw.
   # Cada aplicacao aumenta a lista de palavras que serao trabalhadas.
-  case iteracao==tamanho_maximo+1 do
+  case iteracao==w+1 do
     false ->
       conjuntoN = aumenta_conjunto(palavras,regras)
-      conjuntoNfiltrado = reduzir_tamanho(conjuntoN,tamanho_maximo)
-      calcula_conjunto(conjuntoNfiltrado,regras,tamanho_maximo,iteracao+1)
+      conjuntoNfiltrado = reduzir_tamanho(conjuntoN,w)
+      calcula_conjunto(conjuntoNfiltrado,regras,w,iteracao+1)
     true ->
       palavras
   end
@@ -111,6 +90,9 @@ end
 end
 
 
+"""
+
+Mais alguns exemplos de uso:
 
 input = "nnnAAAnnn"
 input2 = [
@@ -140,3 +122,4 @@ IO.inspect Reconhecedor.aplica_regras(input,r)
 IO.inspect Reconhecedor.aumenta_conjunto(input2,r2)
 
 IO.inspect Reconhecedor.calcula_conjunto(input2,r2,14)
+"""
